@@ -45,6 +45,10 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // add the text updates using mqtt here 
+        //TextReba =
+        //TextRula = 
+
         switch (mode)
         {
             case 1:
