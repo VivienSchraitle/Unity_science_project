@@ -3,61 +3,50 @@ using UnityEngine.UI;
 
 public class OpacitySetter : MonoBehaviour
 {
-    [Tooltip("Reference to the DistanceCalculator script")]
-    public DistanceCalculator distanceCalculator;
+    public GazeTracking gazeTracking;
+    public GameObject targetObject;
+    public float maxDistance = 1.2f; // Maximum distance for full transparency
+    public float minDistance = 0f; // Minimum distance for full opacity
+    public bool affectChildren = true; // Whether to affect children GameObjects
 
-    [Tooltip("Reference to the canvas whose opacity will be adjusted")]
-    public GameObject targetCanvas;
-
-    [Tooltip("Minimum distance for full opacity")]
-    public float minDistance = 0.5f;
-
-    [Tooltip("Maximum distance for zero opacity")]
-    public float maxDistance = 3.0f;
-
-    private CanvasGroup canvasGroup;
+    private Renderer[] renderers;
 
     private void Start()
     {
-        // Ensure the necessary components are available
-        if (distanceCalculator == null)
-        {
-            Debug.LogError("DistanceCalculator reference not set. Please assign the DistanceCalculator script in the inspector.");
-            return;
-        }
-
-        if (targetCanvas == null)
-        {
-            Debug.LogError("Target Canvas reference not set. Please assign the Canvas in the inspector.");
-            return;
-        }
-
-        // Get or add CanvasGroup component
-        canvasGroup = targetCanvas.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-        {
-            canvasGroup = targetCanvas.gameObject.AddComponent<CanvasGroup>();
-        }
+        renderers = targetObject.GetComponentsInChildren<Renderer>();
     }
 
     private void Update()
     {
-        // Check if the DistanceCalculator script is available
-        if (distanceCalculator != null)
+        if (gazeTracking != null)
         {
-            // Get the distance from the DistanceCalculator
-            float distance = distanceCalculator.CalculateDistanceToCanvas(targetCanvas);
+            float distanceToTarget = gazeTracking.distanceToTarget;
 
-            // Adjust opacity based on distance
-            float normalizedDistance = Mathf.Clamp01((distance - minDistance) / (maxDistance - minDistance));
-            float opacity = 1.0f - normalizedDistance;
+            // Clamp the distance within the specified range
+            float clampedDistance = Mathf.Clamp(distanceToTarget, minDistance, maxDistance);
 
-            // Set the canvas opacity
-            canvasGroup.alpha = opacity;
-        }
-        else
-        {
-            Debug.LogError("DistanceCalculator reference is missing. Please assign the DistanceCalculator script in the inspector.");
+            // Calculate opacity based on distance
+            float opacity = 1f - (clampedDistance - minDistance) / (maxDistance - minDistance);
+            Debug.Log(opacity);
+            if (opacity < 0.5f)
+            {
+                opacity = 0;
+            }
+            else
+            {
+                opacity = Mathf.Min(opacity*1.3f,1);
+            }
+            // Apply opacity to all renderers
+            foreach (Renderer renderer in renderers)
+            {
+                Material[] materials = renderer.materials;
+                foreach (Material material in materials)
+                {
+                    Color color = material.color;
+                    color.a = opacity;
+                    material.color = color;
+                }
+            }
         }
     }
 }

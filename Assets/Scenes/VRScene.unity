@@ -4301,10 +4301,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90bae3acc5f3a84eb0ba13abe9ec75a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceCalculator: {fileID: 1333647186}
-  targetCanvas: {fileID: 836242202}
-  minDistance: 0.5
+  gazeTracking: {fileID: 1812711412}
+  targetObject: {fileID: 836242202}
   maxDistance: 3
+  minDistance: 0.5
+  affectChildren: 1
 --- !u!1 &371591902
 GameObject:
   m_ObjectHideFlags: 0
@@ -21515,6 +21516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 836242202}
+  distanceToTarget: 0
 --- !u!1 &1813606582
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ public class GazeTracking : MonoBehaviour
     private float overallRuntimeDuration;
     private float averageDistance;
     private float smallestDistance;
-    private float distanceToTarget;
+    public float distanceToTarget;
     private bool isGazingAtTarget;
 
     private void Start()
@@ -76,27 +76,47 @@ public class GazeTracking : MonoBehaviour
         }
     }
 
-    private bool IsGazingAtTarget(Vector3 gazeOrigin, Vector3 gazeDirection)
+private bool IsGazingAtTarget(Vector3 gazeOrigin, Vector3 gazeDirection)
+{
+    RaycastHit hit;
+    if (Physics.Raycast(gazeOrigin, gazeDirection, out hit))
     {
-        if (targetObject != null)
+        if (hit.collider.gameObject == targetObject)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(gazeOrigin, gazeDirection, out hit))
-            {
-                if (hit.collider.gameObject == targetObject)
-                {
-                    distanceToTarget = 0f; // Distance is 0 if ray hits the collider
-                    return true;
-                }
-                else
-                {
-                    distanceToTarget = Vector3.Distance(hit.point, gazeOrigin);
-                    return false;
-                }
-            }
+            distanceToTarget = 0f; // Distance is 0 if ray hits the collider
+            Debug.Log("Distance to target: " + distanceToTarget);
+            return true;
         }
-        return false;
     }
+    
+    // If the ray doesn't hit the target object's collider, calculate the shortest distance
+    if (targetObject != null)
+    {
+        Collider collider = targetObject.GetComponent<Collider>();
+        if (collider != null)
+        {
+            // Calculate the point on the ray closest to the collider
+            Vector3 closestPointOnRay = ClosestPointOnRay(gazeOrigin, gazeDirection, collider);
+
+            // Calculate the distance between the closest point on the ray and the collider's surface
+            distanceToTarget = Vector3.Distance(closestPointOnRay, collider.ClosestPoint(closestPointOnRay));
+            Debug.Log("Distance to target: " + distanceToTarget);
+
+            return false;
+        }
+    }
+
+    distanceToTarget = Mathf.Infinity; // Set distance to infinity if no collider attached to the object
+    Debug.Log("Distance to target: " + distanceToTarget);
+    return false;
+}
+
+private Vector3 ClosestPointOnRay(Vector3 rayOrigin, Vector3 rayDirection, Collider collider)
+{
+    // Calculate the point on the ray closest to the collider's bounds
+    Vector3 closestPointOnRay = rayOrigin + rayDirection * Vector3.Dot(collider.bounds.center - rayOrigin, rayDirection);
+    return closestPointOnRay;
+}
 
     private void SaveGazeDataToCSV()
     {
