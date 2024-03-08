@@ -58,14 +58,6 @@ public class Controller : MonoBehaviour
                 break;
             case 3:
 
-                break;
-            case 4:
-
-                break;
-            case 5:
-
-                break;
-
             default:
                 mode = 2;
                 if (handler.isActiveAndEnabled == false)

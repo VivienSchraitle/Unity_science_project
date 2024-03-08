@@ -52,7 +52,7 @@ public class GazeTracking : MonoBehaviour
         // Update gaze duration
         if (isGazingAtTarget)
         {
-            Debug.Log("gazing at object");
+            //Debug.Log("gazing at object");
             if (!isGazingAtTarget)
             {
                 gazeCounter++;
@@ -61,7 +61,7 @@ public class GazeTracking : MonoBehaviour
             gazeDurations[gazeCounter] += Time.deltaTime;
             totalGazeDuration += Time.deltaTime;
         }
-        else{Debug.Log("not gazing at object");}
+        //else{Debug.Log("not gazing at object");}
 
         // Update overall runtime duration
         overallRuntimeDuration += Time.deltaTime;
@@ -84,7 +84,7 @@ private bool IsGazingAtTarget(Vector3 gazeOrigin, Vector3 gazeDirection)
         if (hit.collider.gameObject == targetObject)
         {
             distanceToTarget = 0f; // Distance is 0 if ray hits the collider
-            Debug.Log("Distance to target: " + distanceToTarget);
+           // Debug.Log("Distance to target: " + distanceToTarget);
             return true;
         }
     }
@@ -100,14 +100,14 @@ private bool IsGazingAtTarget(Vector3 gazeOrigin, Vector3 gazeDirection)
 
             // Calculate the distance between the closest point on the ray and the collider's surface
             distanceToTarget = Vector3.Distance(closestPointOnRay, collider.ClosestPoint(closestPointOnRay));
-            Debug.Log("Distance to target: " + distanceToTarget);
+           // Debug.Log("Distance to target: " + distanceToTarget);
 
             return false;
         }
     }
 
     distanceToTarget = Mathf.Infinity; // Set distance to infinity if no collider attached to the object
-    Debug.Log("Distance to target: " + distanceToTarget);
+    //Debug.Log("Distance to target: " + distanceToTarget);
     return false;
 }
 
