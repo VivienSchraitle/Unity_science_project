@@ -1,121 +1,113 @@
-using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
-using System.Collections;
-using System;
+using Microsoft.MixedReality.Toolkit.Input;
+using System.IO;
 using Microsoft.MixedReality.Toolkit;
+
 public class GazeTracking : MonoBehaviour
 {
-    private int gazeCount = 0;
-    private float totalGazeDuration = 0.0f;
+    public GameObject targetObject; // Assign the target GameObject in the Inspector
 
-    private bool isBeingGazed = false;
-    private float gazeStartTime = 0.0f;
+    private IMixedRealityGazeProvider gazeProvider;
+    private int gazeCounter;
+    private float[] gazeDurations;
+    private float totalGazeDuration;
+    private float overallRuntimeDuration;
+    private float averageDistance;
+    private float smallestDistance;
+    private float distanceToTarget;
+    private bool isGazingAtTarget;
 
-    [Tooltip("Time threshold for considering a gaze")]
-    public float gazeThreshold = 0.5f;
+    private void Start()
+    {
+        gazeProvider = CoreServices.InputSystem?.GazeProvider;
+
+        if (gazeProvider == null)
+        {
+            Debug.LogError("Gaze Provider not found!");
+        }
+
+        gazeDurations = new float[1000]; // Assuming a maximum of 1000 gaze durations to track
+        gazeCounter = 0;
+        totalGazeDuration = 0f;
+        overallRuntimeDuration = 0f;
+        averageDistance = 0f;
+        smallestDistance = float.MaxValue;
+    }
 
     private void Update()
     {
-        if (isBeingGazed)
+#if UNITY_EDITOR
+        // Simulate gaze pointer in the Unity Editor
+        Vector3 gazeOrigin = Camera.main.transform.position;
+        Vector3 gazeDirection = Camera.main.transform.forward;
+#else
+        // Use the gaze provider to get the gaze origin and direction
+        Vector3 gazeOrigin = gazeProvider.GazeOrigin;
+        Vector3 gazeDirection = gazeProvider.GazeDirection;
+#endif
+
+        // Check if the target object is being gazed at
+        isGazingAtTarget = IsGazingAtTarget(gazeOrigin, gazeDirection);
+
+        // Update gaze duration
+        if (isGazingAtTarget)
         {
-            // Calculate gaze duration
-            float gazeDuration = Time.time - gazeStartTime;
-            totalGazeDuration += gazeDuration;
-
-            // Reset gaze timer
-            gazeStartTime = Time.time;
-
-            // Increment gaze count
-            gazeCount++;
-
-            Debug.Log("Object is being gazed at. Gaze Duration: " + gazeDuration.ToString("F2") + " seconds");
+            Debug.Log("gazing at object");
+            if (!isGazingAtTarget)
+            {
+                gazeCounter++;
+                gazeDurations[gazeCounter] = 0f; // Start new gaze duration
+            }
+            gazeDurations[gazeCounter] += Time.deltaTime;
+            totalGazeDuration += Time.deltaTime;
         }
-        else
+        else{Debug.Log("not gazing at object");}
+
+        // Update overall runtime duration
+        overallRuntimeDuration += Time.deltaTime;
+
+        // Update gaze distance
+        smallestDistance = Mathf.Min(smallestDistance, distanceToTarget);
+
+        // Save gaze data to CSV file
+        if (Application.isEditor)
         {
-            Debug.Log("Object is not being gazed at.");
+            SaveGazeDataToCSV();
         }
-
-        // Reset gaze flag
-        isBeingGazed = false;
     }
 
-    private void OnGazeEnter()
+    private bool IsGazingAtTarget(Vector3 gazeOrigin, Vector3 gazeDirection)
     {
-        // Start tracking gaze
-        isBeingGazed = true;
-        gazeStartTime = Time.time;
-
-        Debug.Log("Gaze entered!");
+        if (targetObject != null)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(gazeOrigin, gazeDirection, out hit))
+            {
+                if (hit.collider.gameObject == targetObject)
+                {
+                    distanceToTarget = 0f; // Distance is 0 if ray hits the collider
+                    return true;
+                }
+                else
+                {
+                    distanceToTarget = Vector3.Distance(hit.point, gazeOrigin);
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
-    private void OnGazeExit()
+    private void SaveGazeDataToCSV()
     {
-        // Stop tracking gaze
-        isBeingGazed = false;
+        // Create CSV file path
+        string filePath = Application.persistentDataPath + "/gaze_data.csv";
 
-        Debug.Log("Gaze exited!");
-    }
-
-    private void OnEnable()
-    {
-        // Subscribe to gaze events
-        CoreServices.InputSystem?.RegisterHandler<IMixedRealityPointerHandler>(GetComponent<GazeHandler>());
-    }
-
-    private void OnDisable()
-    {
-        // Unsubscribe from gaze events
-        CoreServices.InputSystem?.UnregisterHandler<IMixedRealityPointerHandler>(GetComponent<GazeHandler>());
-    }
-
-    private void OnDestroy()
-    {
-        // Unsubscribe from gaze events when the object is destroyed
-        OnDisable();
-    }
-
-    private void OnApplicationQuit()
-    {
-        // Log statistics when the application is quit
-        Debug.Log("Total Gaze Count: " + gazeCount);
-        Debug.Log("Total Gaze Duration: " + totalGazeDuration.ToString("F2") + " seconds");
-
-        float averageGazeDuration = gazeCount > 0 ? totalGazeDuration / gazeCount : 0.0f;
-        Debug.Log("Average Gaze Duration: " + averageGazeDuration.ToString("F2") + " seconds");
-
-        float totalSessionDuration = Time.time;
-        float gazePercentage = totalGazeDuration / totalSessionDuration * 100.0f;
-        Debug.Log("Gaze Percentage: " + gazePercentage.ToString("F2") + "%");
-    }
-}
-
-public class GazeHandler : MonoBehaviour, IMixedRealityPointerHandler
-{
-    public void OnPointerClicked(MixedRealityPointerEventData eventData) { }
-
-    public void OnPointerDown(MixedRealityPointerEventData eventData) { }
-
-    public void OnPointerUp(MixedRealityPointerEventData eventData) { }
-
-    public void OnPointerDragged(MixedRealityPointerEventData eventData) { }
-
-    public void OnPointerDownSpecific(MixedRealityPointerEventData eventData)
-    {
-        OnGazeEnter();
-    }
-
-    public void OnPointerUpSpecific(MixedRealityPointerEventData eventData)
-    {
-        OnGazeExit();
-    }
-
-    private void OnGazeEnter()
-    {
-        SendMessage("OnGazeEnter", SendMessageOptions.DontRequireReceiver);
-    }
-
-    private void OnGazeExit()
-    {
-        SendMessage("OnGazeExit", SendMessageOptions.DontRequireReceiver);
+        // Write gaze data to CSV file
+        using (StreamWriter writer = new StreamWriter(filePath, true))
+        {
+            //writer.WriteLine("Gaze Counter,Gaze Duration,Average Distance,Overall Runtime Duration");
+            //writer.WriteLine($"{gazeCounter},{totalGazeDuration},{averageDistance},{overallRuntimeDuration}");
+        }
     }
 }

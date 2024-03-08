@@ -75,7 +75,7 @@ public class ColorManager : MonoBehaviour
 
         while (isUpdatingColors)
         {
-            Debug.Log("starting routine");
+           // Debug.Log("starting routine");
             UpdateColorsAtReasonableSpeed();
             yield return new WaitForSeconds(0.2f); // Adjust the delay as needed
         }
@@ -92,11 +92,11 @@ public class ColorManager : MonoBehaviour
         {
             RawDataArray = MQTTColor.RawData.Split(helper);
         }        
-        Debug.Log(MQTTColor.RawData);
-        Debug.Log(RawDataArray.Length);
+ //       Debug.Log(MQTTColor.RawData);
+ //       Debug.Log(RawDataArray.Length);
         if (RawDataArray.Length> 1)
         {
-            Debug.Log("RawDataArray.Length> 1");
+//            Debug.Log("RawDataArray.Length> 1");
             //data formating
             string color;
             if (float.Parse(RawDataArray[0], CultureInfo.InvariantCulture.NumberFormat) < 25f && float.Parse(RawDataArray[0], CultureInfo.InvariantCulture.NumberFormat) >= 0f)
@@ -448,7 +448,7 @@ public class ColorManager : MonoBehaviour
 
             // Create tuple and add to the array
             data.Add(Tuple.Create(color, RawDataArray[20].ToString()));
-            Debug.Log("exiting if");
+           // Debug.Log("exiting if");
         }
 
 
@@ -459,10 +459,10 @@ public class ColorManager : MonoBehaviour
 
 
         //Debug.Log("First Entry: " + float.Parse(RawDataArray[0], CultureInfo.InvariantCulture.NumberFormat));
-        Debug.Log("I am here");
-        if (data.Count < 1) { Debug.Log("data is empty"); } else { Debug.Log(data.Count); }
+       // Debug.Log("I am here");
+//        if (data.Count < 1) { Debug.Log("data is empty"); } else { Debug.Log(data.Count); }
         
-        Debug.Log("I am here");
+//        Debug.Log("I am here");
         if (data.Count > 1)
         {
             if (mode == 1)
