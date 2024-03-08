@@ -38,6 +38,8 @@ public class Controller : MonoBehaviour
         {
             Debug.LogError("MRTK Cube Prefab is not assigned.");
         }
+        setRULA();
+        setREBA();
     }
 
     // Update is called once per frame
