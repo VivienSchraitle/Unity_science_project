@@ -19,6 +19,9 @@ public class Controller : MonoBehaviour
     private Boolean reba;
     public TextMeshPro TextReba;
     public TextMeshPro TextRula;
+
+    public GameObject QuadReba;
+    public GameObject QuadRula;
     private Vector3 location;
     public GameObject canvas;
     private int mode = 2;
@@ -93,12 +96,16 @@ public class Controller : MonoBehaviour
 
     }
     public void setREBA() {
-        TextReba.text = "REBA" + "\n" +
-            "1";
+        TextReba.enabled = !TextReba.enabled;
+        QuadReba.SetActive(QuadReba.activeSelf);  
+
+        //TextReba.text = number
     }
     public void setRULA() {
-        TextRula.text = "RULA" + "\n" +
-          "1";
+        TextRula.enabled = !TextRula.enabled;
+        QuadRula.SetActive(QuadRula.activeSelf);  
+
+        //TextRula.text = number
     }
     private void setAngle()
     {
