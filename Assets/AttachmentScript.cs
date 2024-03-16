@@ -228,24 +228,24 @@ public class AttachmentScript : MonoBehaviour
         backTorsion.transform.GetChild(0).localPosition = new Vector3(0,0.26f,-0.01f);
         backTorsion.transform.GetChild(0).localScale = new Vector3(0.4f, 0.4f ,1);
 
-        shoulderAdductionL.SetActive(true);
+        shoulderAdductionL.SetActive(false);
         shoulderAdductionL.transform.localPosition = new Vector3(0,0,-0.01f);
         shoulderAdductionL.transform.GetChild(0).localPosition = new Vector3(0.1f,0.26f,-0.01f);
         shoulderAdductionL.transform.GetChild(0).localScale = new Vector3(0.5f, 0.5f ,1);           
         
-        shoulderAdductionR.SetActive(true);
+        shoulderAdductionR.SetActive(false);
         shoulderAdductionR.transform.localPosition = new Vector3(0,0,-0.01f);
         shoulderAdductionR.transform.GetChild(0).localPosition = new Vector3(-0.1f,0.26f,-0.01f);
         shoulderAdductionR.transform.GetChild(0).localScale = new Vector3(0.5f, 0.5f ,1);
 
-        shoulderFlexionL.SetActive(false);
-        shoulderFlexionL.transform.localPosition = new Vector3(0.105f, 0.262f, -0.1f);
-        shoulderFlexionL.transform.GetChild(0).localPosition = new Vector3(-0,0,-0.01f);
-        shoulderFlexionL.transform.GetChild(0).localScale = new Vector3(0.5f, 0.5f ,1);
+        shoulderFlexionL.SetActive(true);
+        shoulderFlexionL.transform.localPosition = new Vector3(0,0,-0.01f);
+        shoulderFlexionL.transform.GetChild(0).localPosition = new Vector3(0.1f,0.26f,-0.01f);
+        shoulderFlexionL.transform.GetChild(0).localScale = new Vector3(0.5f, 0.5f ,1);  
 
-        shoulderFlexionR.SetActive(false);
-        shoulderFlexionR.transform.localPosition = new Vector3(-0.105f, 0.262f, -0.1f);
-        shoulderFlexionR.transform.GetChild(0).localPosition = new Vector3(0,0,-0.01f);
+        shoulderFlexionR.SetActive(true);
+        shoulderFlexionR.transform.localPosition = new Vector3(0,0,-0.01f);
+        shoulderFlexionR.transform.GetChild(0).localPosition = new Vector3(-0.1f,0.26f,-0.01f);
         shoulderFlexionR.transform.GetChild(0).localScale = new Vector3(0.5f, 0.5f ,1);
 
         shoulderRotationL.SetActive(false);

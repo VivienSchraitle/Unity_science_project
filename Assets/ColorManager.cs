@@ -772,27 +772,27 @@ public class ColorManager : MonoBehaviour
                 }
                 if (data[8].Item1 == "red" || data[10].Item1 == "red" || data[12].Item1 == "red")
                 {
-                    shoulderAdductionL.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+                    shoulderFlexionL.GetComponentInChildren<SpriteRenderer>().color = Color.red;
                 }
                 else if (data[8].Item1 == "orange" || data[10].Item1 == "orange" || data[12].Item1 == "orange")
                 {
-                    shoulderAdductionL.GetComponentInChildren<SpriteRenderer>().color = orange;
+                    shoulderFlexionL.GetComponentInChildren<SpriteRenderer>().color = orange;
                 }
                 else
                 {
-                    shoulderAdductionL.GetComponentInChildren<SpriteRenderer>().color = Color.green;
+                    shoulderFlexionL.GetComponentInChildren<SpriteRenderer>().color = Color.green;
                 }
                 if (data[9].Item1 == "red" || data[11].Item1 == "red" || data[13].Item1 == "red")
                 {
-                    shoulderAdductionR.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+                    shoulderFlexionR.GetComponentInChildren<SpriteRenderer>().color = Color.red;
                 }
                 else if (data[9].Item1 == "orange" || data[11].Item1 == "orange" || data[13].Item1 == "orange")
                 {
-                    shoulderAdductionR.GetComponentInChildren<SpriteRenderer>().color = orange;
+                    shoulderFlexionR.GetComponentInChildren<SpriteRenderer>().color = orange;
                 }
                 else
                 {
-                    shoulderAdductionR.GetComponentInChildren<SpriteRenderer>().color = Color.green;
+                    shoulderFlexionR.GetComponentInChildren<SpriteRenderer>().color = Color.green;
                 }
                 if (data[14].Item1 == "red")
                 {
@@ -859,90 +859,69 @@ public class ColorManager : MonoBehaviour
             else if (mode == 3)
             {
                 String text = "";
-                if (data[0].Item1 == "red")
+                if (data[0].Item1 == "red" || data[1].Item1 == "red")
                 {
-                    text = text + "adjust forward head tilt \n";
+                    text = text + "Head\n";
                 }
-
-                if (data[1].Item1 == "red")
+                else
                 {
-                    text = text + "adjust sidewise head tilt \n";
+                    text = text + "\n";
                 }
-                if (data[2].Item1 == "red")
+                if (data[2].Item1 == "red" || data[3].Item1 == "red")
                 {
-                    text = text + "adjust neck torsion \n";
+                    text = text + "Neck\n";
                 }
-                if (data[3].Item1 == "red")
+                else
                 {
-                    text = text + "adjust neck tilt \n";
+                    text = text + "\n";
                 }
-                if (data[4].Item1 == "red")
+                if (data[4].Item1 == "red"||data[5].Item1 == "red"||data[6].Item1 == "red"||data[7].Item1 == "red")
                 {
-                    text = text + "adjust body forward tilt \n";
+                    text = text + "Spine\n";
                 }
-                if (data[5].Item1 == "red")
+                else
                 {
-                    text = text + "adjust body side tilt \n";
+                    text = text + "\n";
                 }
-                if (data[6].Item1 == "red")
+                if (data[10].Item1 == "red"||data[12].Item1 == "red"||data[14].Item1 == "red")
                 {
-                    text = text + "adjust back tilt \n";
+                    text = text + "Left Arm\n";
                 }
-                if (data[7].Item1 == "red")
+                else
                 {
-                    text = text + "adjust back torsion \n";
+                    text = text + "\n";
                 }
-                if (data[8].Item1 == "red")
+                if (data[11].Item1 == "red"||data[13].Item1 == "red"||data[15].Item1 == "red")
                 {
-                    text = text + "adjust left shoulder adduction\n";
+                    text = text + "Right Arm\n";
                 }
-                if (data[9].Item1 == "red")
+                else
                 {
-                    text = text + "adjust right shoulder adduction\n";
+                    text = text + "\n";
                 }
-                if (data[10].Item1 == "red")
+                if (data[16].Item1 == "red"||data[18].Item1 == "red")
                 {
-                    text = text + "adjust left shoulder flexsation\n";
+                    text = text + "Left Hand\n";
                 }
-                if (data[11].Item1 == "red")
+                else
                 {
-                    text = text + "adjust right shoulder flexsation\n";
+                    text = text + "\n";
                 }
-                if (data[12].Item1 == "red")
+                if (data[17].Item1 == "red"||data[19].Item1 == "red")
                 {
-                    text = text + "adjust left shoulder rotation\n";
+                    text = text + "Right Hand\n";
                 }
-                if (data[13].Item1 == "red")
+                else
                 {
-                    text = text + "adjust right shoulder rotation\n";
-                }
-                if (data[14].Item1 == "red")
-                {
-                    text = text + "adjust left elbow flexsation\n";
-                }
-                if (data[15].Item1 == "red")
-                {
-                    text = text + "adjust right elbow flexsation\n";
-                }
-                if (data[16].Item1 == "red")
-                {
-                    text = text + "adjust left hand flexsation\n";
-                }
-                if (data[17].Item1 == "red")
-                {
-                    text = text + "adjust right hand flexsation\n";
-                }
-                if (data[18].Item1 == "red")
-                {
-                    text = text + "adjust left hand twist\n";
-                }
-                if (data[19].Item1 == "red")
-                {
-                    text = text + "adjust right hand twist\n";
+                    text = text + "\n";
                 }
                 if (data[20].Item1 == "red")
                 {
-                    text = text + "adjust standing position\n";
+                    text = text + "Legs\n";
+                }
+                else
+                {
+                    text = text + "\n";
                 }
                 textMeshPro.text = text;
                 Vector2 textSize = textMeshPro.GetRenderedValues(false);
