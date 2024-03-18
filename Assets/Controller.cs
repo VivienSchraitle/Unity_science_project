@@ -8,6 +8,8 @@ using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 using Random = System.Random;
 using System.Threading;
 using Microsoft.MixedReality.Toolkit;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 public class Controller : MonoBehaviour
 {
@@ -19,6 +21,10 @@ public class Controller : MonoBehaviour
     private Boolean reba;
     public TextMeshPro TextReba;
     public TextMeshPro TextRula;
+    public string BrokerAddress = "broker.hivemq.com";
+    public int BrokerPort = 1883;
+    public string[] topics = {"mqtt-reba-unity", "mqtt-rula-unity"};
+    private MqttClient client;
 
     public GameObject QuadReba;
     public GameObject QuadRula;
@@ -38,16 +44,39 @@ public class Controller : MonoBehaviour
         {
             Debug.LogError("MRTK Cube Prefab is not assigned.");
         }
-        setRULA();
-        setREBA();
+        
+        client = new MqttClient(BrokerAddress,BrokerPort)
+        
+        //sets reba and rula depending on msg topic
+        client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+        
+        client.Connect(Guid.NewGuid().ToString());
+        client.Subscribe(topics, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE })
+
+        //setRULA();
+        //setREBA();
+    }
+    void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+    {
+
+        Debug.Log("Received: " + System.Text.Encoding.UTF8.GetString(e.Message));
+
+        if (e.Topic == "mqtt-reba-unity")
+        {
+            setREBA(e.Message);
+        } 
+        else if (e.Topic == "mqtt-rula-unity") 
+        {
+            setRULA(e.Message);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         // add the text updates using mqtt here 
-        //TextReba =
-        //TextRula = 
+        client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+
 
         switch (mode)
         {
@@ -93,17 +122,17 @@ public class Controller : MonoBehaviour
         manipulator.HostTransform = instantiatedCube.transform;
 
     }
-    public void setREBA() {
+    public void setREBA(byte[] msg) {
         TextReba.enabled = !TextReba.enabled;
         QuadReba.SetActive(QuadReba.activeSelf);  
 
-        //TextReba.text = number
+        TextReba.text = msg
     }
-    public void setRULA() {
+    public void setRULA(byte[] msg) {
         TextRula.enabled = !TextRula.enabled;
         QuadRula.SetActive(QuadRula.activeSelf);  
 
-        //TextRula.text = number
+        TextRula.text = msg
     }
     private void setAngle()
     {
