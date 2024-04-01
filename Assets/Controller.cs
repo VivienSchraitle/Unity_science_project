@@ -45,7 +45,7 @@ public class Controller : MonoBehaviour
             Debug.LogError("MRTK Cube Prefab is not assigned.");
         }
         
-        client = new MqttClient(BrokerAddress,BrokerPort);
+        client = new MqttClient(BrokerAddress, BrokerPort, false, null);
         
         //sets reba and rula depending on msg topic
         client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
@@ -126,13 +126,13 @@ public class Controller : MonoBehaviour
         TextReba.enabled = !TextReba.enabled;
         QuadReba.SetActive(QuadReba.activeSelf);  
 
-        TextReba.text = msg;
+        TextReba.text = msg.ToString();
     }
     public void setRULA(byte[] msg) {
         TextRula.enabled = !TextRula.enabled;
         QuadRula.SetActive(QuadRula.activeSelf);  
 
-        TextRula.text = msg;
+        TextRula.text = msg.ToString();
     }
     private void setAngle()
     {
